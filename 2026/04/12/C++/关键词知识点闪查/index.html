@@ -20,15 +20,15 @@
   <link rel="preload" href="/css/fonts/Roboto-Regular.ttf" as="font" type="font/ttf" crossorigin="anonymous">
   <link rel="preload" href="/css/fonts/Roboto-Bold.ttf" as="font" type="font/ttf" crossorigin="anonymous">
 
-  <meta name="description" content="4.10 1、C++20协程对称传输 2、用户程序和编译器机制 3、mmap 4、进程间的通信 4.11 5、promise()是C++20协程给协程句柄访问promise_type成员变量的接口。 6、关于协程帧的构造，需要构造两个协议 Promise 协议和 Awaiter 协议，Promise 协议必须定义在 promise_type 里，首先先定义一个句柄coroutine_handle类">
+  <meta name="description" content="关键知识点闪查4.101、C++20协程对称传输 2、用户程序和编译器机制 3、mmap 4、进程间的通信 4.115、promise()是C++20协程给协程句柄访问promise_type成员变量的接口。 6、关于协程帧的构造，需要构造两个协议 Promise 协议和 Awaiter 协议，Promise 协议必须定义在 promise_type 里，首先先定义一个句柄coroutine_ha">
 <meta property="og:type" content="article">
 <meta property="og:title" content="achonic&#39;s blogs">
-<meta property="og:url" content="https://achonic.github.io/2026/04/12/%E5%85%B3%E9%94%AE%E8%AF%8D%E7%9F%A5%E8%AF%86%E7%82%B9%E9%97%AA%E6%9F%A5/index.html">
+<meta property="og:url" content="https://achonic.github.io/2026/04/12/C++/%E5%85%B3%E9%94%AE%E8%AF%8D%E7%9F%A5%E8%AF%86%E7%82%B9%E9%97%AA%E6%9F%A5/index.html">
 <meta property="og:site_name" content="achonic&#39;s blogs">
-<meta property="og:description" content="4.10 1、C++20协程对称传输 2、用户程序和编译器机制 3、mmap 4、进程间的通信 4.11 5、promise()是C++20协程给协程句柄访问promise_type成员变量的接口。 6、关于协程帧的构造，需要构造两个协议 Promise 协议和 Awaiter 协议，Promise 协议必须定义在 promise_type 里，首先先定义一个句柄coroutine_handle类">
+<meta property="og:description" content="关键知识点闪查4.101、C++20协程对称传输 2、用户程序和编译器机制 3、mmap 4、进程间的通信 4.115、promise()是C++20协程给协程句柄访问promise_type成员变量的接口。 6、关于协程帧的构造，需要构造两个协议 Promise 协议和 Awaiter 协议，Promise 协议必须定义在 promise_type 里，首先先定义一个句柄coroutine_ha">
 <meta property="og:locale">
 <meta property="article:published_time" content="2026-04-12T08:20:53.835Z">
-<meta property="article:modified_time" content="2026-04-12T06:57:41.172Z">
+<meta property="article:modified_time" content="2026-04-12T08:28:31.191Z">
 <meta property="article:author" content="achonic">
 <meta name="twitter:card" content="summary">
   
@@ -120,15 +120,17 @@
   <div class="info-card">
     <div class="avatar">
       
+        <image src=/avatar.png></image>
+      
       <div class="img-dim"></div>
     </div>
     <div class="info">
       <div class="username">achonic </div>
       <div class="dot"></div>
-      <div class="subtitle">software / C++ developer </div>
+      <div class="subtitle">software engineer / C++ developer </div>
       <div class="link-list">
         
-          <a class="link-btn" target="_blank" rel="noopener" href="https://twitter.com" title="Twitter"><i class="fa-brands fa-twitter"></i></a>
+          <a class="link-btn" target="_blank" rel="noopener" href="https://space.bilibili.com/11445862" title="Bilibili"><i class="fa-brands fa-bilibili"></i></a>
         
           <a class="link-btn" target="_blank" rel="noopener" href="https://store.steampowered.com" title="Steam"><i class="fa-brands fa-steam"></i></a>
         
@@ -157,7 +159,7 @@
        
 
 
-<article id="post-关键词知识点闪查" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+<article id="post-C++/关键词知识点闪查" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   
     
    
@@ -196,13 +198,11 @@
       </header>
       <div class="e-content article-entry" itemprop="articleBody">
         
-          <p>4.10</p>
-<p>1、C++20协程对称传输</p>
+          <h1 id="关键知识点闪查"><a href="#关键知识点闪查" class="headerlink" title="关键知识点闪查"></a>关键知识点闪查</h1><h2 id="4-10"><a href="#4-10" class="headerlink" title="4.10"></a>4.10</h2><p>1、C++20协程对称传输</p>
 <p>2、用户程序和编译器机制</p>
 <p>3、mmap</p>
 <p>4、进程间的通信</p>
-<p>4.11</p>
-<p>5、promise()是C++20协程给协程句柄访问promise_type成员变量的接口。</p>
+<h2 id="4-11"><a href="#4-11" class="headerlink" title="4.11"></a>4.11</h2><p>5、promise()是C++20协程给协程句柄访问promise_type成员变量的接口。</p>
 <p>6、关于协程帧的构造，需要构造两个协议 Promise 协议和 Awaiter 协议，Promise 协议必须定义在 promise_type 里，首先先定义一个句柄coroutine_handle类型为promise_type，promise_type里定义协程帧 Promise 协议的成员变量和函数，promise_type留给用户的函数接口是直接和编译器约定的，比如get_return_object()，initial_suspend()，它在C++20标准库<coroutine>里是找不到定义的，标准库里有定义的是std::coroutine_handle&lt;&gt;，定义了协程句柄可供用户持有，通过这个句柄可以from_promise拿到promise_type句柄，可以通过promise()访问promise_type成员变量。也就是说promise_type定义了协程的行为，比如对称传输，内存分配，对调用协程句柄的持有。此外还有 Awaiter 协议定义了 co_await 和 co_return的行为，包括 await_ready()， await_suspe </p>
 <p>7、嵌套类。C++可以先实例化内部类，再实例化外部类。Task<int>::promise_type 是一个task内部的一个数据结构，这个结构会在调用协程函数的时候被实例化，在堆上分配一块协程帧内存，然后填入 Promise 协议和 Awaiter 协议。协程构造完成之后，通过get_return_object函数实例化task对象，然后返回task对象，让外部调用了协程函数的线程持有这个task对象。</p>
 <p>8、整个C++20协程的运作方式：</p>
@@ -223,8 +223,7 @@
 <li><strong>非对称传输是程序员的手动操作</strong>：你自己调用 <code>handle.resume()</code>，这就是一个普通函数调用（CALL），栈帧必然累加。</li>
 <li><strong><code>continuation_</code> 就是对称传输的”链条”</strong>：每一层通过 <code>continuation_</code> 记住上一层是谁，执行完后把上一层的句柄交给编译器，编译器帮你跳回去。</li>
 </ol>
-<p>4.12</p>
-<p>10、协程内存池：</p>
+<h2 id="4-12"><a href="#4-12" class="headerlink" title="4.12"></a>4.12</h2><p>10、协程内存池：</p>
 
         
       </div>
