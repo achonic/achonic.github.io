@@ -28,7 +28,7 @@
 <meta property="og:description" content="关键知识点闪查4.101、C++20协程对称传输 2、用户程序和编译器机制 3、mmap 4、进程间的通信 4.115、promise()是C++20协程给协程句柄访问promise_type成员变量的接口。 6、关于协程帧的构造，需要构造两个协议 Promise 协议和 Awaiter 协议，Promise 协议必须定义在 promise_type 里，首先先定义一个句柄coroutine_ha">
 <meta property="og:locale">
 <meta property="article:published_time" content="2026-04-12T08:20:53.835Z">
-<meta property="article:modified_time" content="2026-04-14T13:12:21.633Z">
+<meta property="article:modified_time" content="2026-04-15T10:33:24.619Z">
 <meta property="article:author" content="achonic">
 <meta name="twitter:card" content="summary">
   
@@ -203,7 +203,7 @@
   
           </div>
           <div class="wordcount need-seperator meta-info">
-            2k words 
+            2.6k words 
           </div>
         </div>
         
@@ -236,11 +236,24 @@
 <li><strong><code>continuation_</code> 就是对称传输的”链条”</strong>：每一层通过 <code>continuation_</code> 记住上一层是谁，执行完后把上一层的句柄交给编译器，编译器帮你跳回去。</li>
 </ol>
 <h2 id="4-12"><a href="#4-12" class="headerlink" title="4.12"></a>4.12</h2><p>10、协程内存池：</p>
+<p>PoolFreeBlock 裸 FreeBlock指针。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">PoolFreeBlock</span> &#123;</span><br><span class="line"> PoolFreeBlock *next;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>全局slab管理器 封装在类 CoroutineMemoryPool 里</p>
+<p>slab是一个结构体（内存块），存储slab内存块的内存地址</p>
+<p> CoroutineMemoryPool管理一个slab容器：std::vector<Slab> slabs_;</p>
+<p>CoroutineMemoryPool定义：协程帧大小，slab块大小，每个slab装多少个协程帧，</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="keyword">constexpr</span> std::<span class="type">size_t</span> BLOCK_BYTES = <span class="number">128</span>; <span class="comment">// 覆盖常见协程帧(56~112B)，2×cache line 对齐</span></span><br><span class="line"> <span class="type">static</span> <span class="keyword">constexpr</span> std::<span class="type">size_t</span> SLAB_BYTES = <span class="number">4</span> &lt;&lt; <span class="number">20</span>; <span class="comment">// 4MB</span></span><br><span class="line"> <span class="type">static</span> <span class="keyword">constexpr</span> std::<span class="type">size_t</span> BLOCKS_PER_SLAB =</span><br><span class="line">     SLAB_BYTES / BLOCK_BYTES; <span class="comment">// 32768</span></span><br><span class="line"> <span class="type">static</span> <span class="keyword">constexpr</span> std::<span class="type">size_t</span> REFILL_BATCH = <span class="number">4096</span>;</span><br></pre></td></tr></table></figure>
+
+
+
 <h2 id="4-14"><a href="#4-14" class="headerlink" title="4.14"></a>4.14</h2><p>11、C++20关于 std::atomic 的升级，等待机制 std::atomic::wait</p>
 <p>12、 锁争用和同步原语</p>
-<p>13、this指针的用途，this指针只能出现在类的非静态成员函数（排除友元函数和静态成员函数）里。</p>
-<p>用途：解决命名冲突，返回对象本身，作为参数传入</p>
+<p>13、this指针的用途，this指针只能出现在类的<strong>非静态成员函数</strong>（排除友元函数和静态成员函数）里。</p>
+<p>用途：<strong>解决命名冲突，返回对象本身，作为参数传入</strong></p>
 <p>14、private<code>和</code>protected 对于类外部持有该对象的指针都是不可见的。protected和private的区别在于继承的时候，子类继承父类，子类能够访问protected的成员，但是不能访问private的成员。</p>
+<h2 id="4-15"><a href="#4-15" class="headerlink" title="4.15"></a>4.15</h2><p>15、void* 指针，无类型指针，通用指针，泛型指针。任何类型的地址都可以赋值给 void* ，也就是说 void* 可以指向任何类型的对象。</p>
+<p>限制：不能够<strong>解引用</strong>以及<strong>指针运算</strong></p>
 
         
       </div>
