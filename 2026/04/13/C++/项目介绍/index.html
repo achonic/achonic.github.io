@@ -20,15 +20,15 @@
   <link rel="preload" href="/css/fonts/Roboto-Regular.ttf" as="font" type="font/ttf" crossorigin="anonymous">
   <link rel="preload" href="/css/fonts/Roboto-Bold.ttf" as="font" type="font/ttf" crossorigin="anonymous">
 
-  <meta name="description" content="基于io_uring和MPSC无锁队列的C++20协程任务调度执行引擎技术栈：C++20协程(cotoutine)，多线程，无锁编程，原子变量，内存模型，模板元编程，协程内存池，io_uirng Thread-per-Core 项目描述：通过 MPSC 无锁队列构建跨线程任务投递通道，支持多业务线程高频并发投递协程任务，并由单线程引擎驱动 cpu 计算与 I&#x2F;O 协程任务的异步执行。 核">
+  <meta name="description" content="基于MPSC无锁队列和C++20异步协程的任务编排执行引擎技术栈：C++20协程(cotoutine)，无锁编程，原子变量，io_uring，内存模型，模板元编程，协程内存池， shared-nothing 项目描述：通过C++20的coroutine和io_uring封装异步协程任务， MPSC 无锁队列构建多线程异步协程任务投递通道，worker线程执行投递的协程任务，dag编排协程执行顺序。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="项目介绍">
 <meta property="og:url" content="https://achonic.github.io/2026/04/13/C++/%E9%A1%B9%E7%9B%AE%E4%BB%8B%E7%BB%8D/index.html">
 <meta property="og:site_name" content="achonic&#39;s blogs">
-<meta property="og:description" content="基于io_uring和MPSC无锁队列的C++20协程任务调度执行引擎技术栈：C++20协程(cotoutine)，多线程，无锁编程，原子变量，内存模型，模板元编程，协程内存池，io_uirng Thread-per-Core 项目描述：通过 MPSC 无锁队列构建跨线程任务投递通道，支持多业务线程高频并发投递协程任务，并由单线程引擎驱动 cpu 计算与 I&#x2F;O 协程任务的异步执行。 核">
+<meta property="og:description" content="基于MPSC无锁队列和C++20异步协程的任务编排执行引擎技术栈：C++20协程(cotoutine)，无锁编程，原子变量，io_uring，内存模型，模板元编程，协程内存池， shared-nothing 项目描述：通过C++20的coroutine和io_uring封装异步协程任务， MPSC 无锁队列构建多线程异步协程任务投递通道，worker线程执行投递的协程任务，dag编排协程执行顺序。">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2026-04-13T06:26:16.319Z">
-<meta property="article:modified_time" content="2026-04-15T09:56:04.464Z">
+<meta property="article:modified_time" content="2026-04-16T15:55:59.546Z">
 <meta property="article:author" content="achonic">
 <meta name="twitter:card" content="summary">
   
@@ -238,25 +238,37 @@
   
           </div>
           <div class="wordcount need-seperator meta-info">
-            915 words 
+            1.3k words 
           </div>
         </div>
         
       </header>
       <div class="e-content article-entry" itemprop="articleBody">
         
-          <h2 id="基于io-uring和MPSC无锁队列的C-20协程任务调度执行引擎"><a href="#基于io-uring和MPSC无锁队列的C-20协程任务调度执行引擎" class="headerlink" title="基于io_uring和MPSC无锁队列的C++20协程任务调度执行引擎"></a>基于io_uring和MPSC无锁队列的C++20协程任务调度执行引擎</h2><p>技术栈：C++20协程(cotoutine)，多线程，无锁编程，原子变量，内存模型，模板元编程，协程内存池，io_uirng</p>
-<p>Thread-per-Core</p>
-<p>项目描述：通过 MPSC 无锁队列构建跨线程任务投递通道，支持多业务线程高频并发投递协程任务，并由单线程引擎驱动 cpu 计算与 I&#x2F;O 协程任务的异步执行。</p>
+          <h2 id="基于MPSC无锁队列和C-20异步协程的任务编排执行引擎"><a href="#基于MPSC无锁队列和C-20异步协程的任务编排执行引擎" class="headerlink" title="基于MPSC无锁队列和C++20异步协程的任务编排执行引擎"></a>基于MPSC无锁队列和C++20异步协程的任务编排执行引擎</h2><p>技术栈：C++20协程(cotoutine)，无锁编程，原子变量，io_uring，内存模型，模板元编程，协程内存池，</p>
+<p>shared-nothing</p>
+<p>项目描述：通过C++20的coroutine和io_uring封装异步协程任务， MPSC 无锁队列构建多线程异步协程任务投递通道，worker线程执行投递的协程任务，dag编排协程执行顺序。</p>
 <p>核心产出与技术点：</p>
-<p>MPSC无锁队列的设计：设计了一个内存连续的环形缓冲区。针对跨线程协程任务投递，舍弃 std::mutex ，多生产者基于 std::atomic 原子变量和操作，通过内存屏障操作编排内存序，从而规定指令读写的先后顺序，最大限度保留性能的情况下，解决跨线程投递的并发安全问题。避免了任务投递过程中的锁开销和线程上下文切换开销。</p>
+<p>MPSC无锁队列的设计：设计了一个内存连续的环形缓冲区。针对跨线程协程任务投递，基于 std::atomic 原子变量和操作，通过编排内存序，设置内存屏障，最大限度保留性能的情况下，解决跨线程投递的并发安全问题。极大地减少了任务投递过程中的锁开销和线程上下文切换开销。</p>
 <p>协程抽象层：基于 C++20 标准库 &lt; coroutine &gt; 封装 <code>Task&lt;T&gt;</code> 协程对象，Task<T> 协程对象持有协程句柄，Task类定义promise_type协程的构建和生命周期管理，promise_type通过持有上下文协程句柄实现对称传输避免连环resume堆叠，导致栈空间不足爆栈。</p>
-<p>io_uring ( Proactor模式 ) 结合协程：通过 C++20 协程提供的 awaiter 协议，封装 io_uring 的读写操作。有 IO 读写时挂起当前任务协程，提交 IO 读写事件到内核。</p>
-<p>引擎调度器：接收协程任务的投递，创建worker线程开启loop循环管理协程任务池生命周期，执行活跃的协程任务，回收已完成任务。</p>
+<p>io_uring ( Proactor模式 ) 结合协程：通过 C++20 协程提供的 awaiter 协议，封装 io_uring 的读写操作。有 IO 读写时挂起当前任务协程，提交 IO 读写事件到内核。io_uring极大地减少了系统调用开销，结合协程封装实现业务协程任务编写的逻辑同步，执行异步。</p>
+<p>引擎调度器：接收协程任务的投递，创建worker线程开启loop循环管理协程任务池生命周期，执行活跃的协程任务，回收已完成任务，防止内存泄漏。</p>
 <p>协程帧内存池的设计：通过内存池替代协程帧创建时new和delete内存分配操作。实现了 Thread-Local 缓存和全局 slab 池两级架构</p>
 <p>性能基准测试：</p>
-<p>1、google benchmark场景4个生产者线程投递任务，单消费者消费。MPSC无锁队列对比mutex速度快6-7x，对比boost的boost::lockfree::queue快2x。google benchmark场景本地 echo_server 的io吞吐量测试，开启多线程模拟客户端，io_uring对比boost.asio性能高约25%。</p>
-<p>2、</p>
+<p>1、google benchmark场景4个生产者线程投递任务，单worker线程消费任务。MPSC无锁队列对比mutex速度快6-7倍，是boost的boost::lockfree::queue的2倍。</p>
+<p>2、google benchmark场景本地 echo_server 的io吞吐量测试，本项目使用io_uring对比boost.asio性能高约25%。</p>
+<p>总结你的三个“核心产出”话术：</p>
+<ul>
+<li>MPSC 无锁队列： 解决了多线程并发投递的冲突，实现了入口无锁化。</li>
+<li>io_uring + 协程： 解决了异步 IO 调度的开销，实现了执行非阻塞化。</li>
+<li>Shared-nothing 架构： 解决了业务数据的竞争，实现了逻辑无锁化。</li>
+</ul>
+<h2 id="基于C-的透明反向代理网关"><a href="#基于C-的透明反向代理网关" class="headerlink" title="基于C++的透明反向代理网关"></a>基于C++的透明反向代理网关</h2><p>技术栈：主从reactor，多线程，互斥锁和锁管理，条件变量，智能指针，线程池，epoll，socket。</p>
+<p>项目描述：使用IO多路复用机制监听处理客户端高并发连接请求，根据不同的请求入口把消息转发到真实后端地址。</p>
+<p>核心产出与技术点：</p>
+<p>1、主从reactor以及one loop per thread模型，其中单线程Acceptor只监听和处理连接</p>
+<p>2、客户端和服务器的数据传输，任务封装成lambda对象，由主线程分发，给线程池当中取出的worker线程处理。</p>
+<p>3、worker线程负责客户端与网关，网关与服务器的双向通信。</p>
 
         
       </div>
