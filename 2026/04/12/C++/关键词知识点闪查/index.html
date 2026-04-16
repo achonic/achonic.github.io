@@ -28,7 +28,7 @@
 <meta property="og:description" content="关键知识点闪查4.101、C++20协程对称传输 2、用户程序和编译器机制 3、mmap 4、进程间的通信 4.115、promise()是C++20协程给协程句柄访问promise_type成员变量的接口。 6、关于协程帧的构造，需要构造两个协议 Promise 协议和 Awaiter 协议，Promise 协议必须定义在 promise_type 里，首先先定义一个句柄coroutine_ha">
 <meta property="og:locale">
 <meta property="article:published_time" content="2026-04-12T08:20:53.835Z">
-<meta property="article:modified_time" content="2026-04-15T10:33:24.619Z">
+<meta property="article:modified_time" content="2026-04-16T07:05:02.436Z">
 <meta property="article:author" content="achonic">
 <meta name="twitter:card" content="summary">
   
@@ -149,7 +149,7 @@
 
   <div class="widget-wrap">
     <div class="widget">
-      <h3 class="widget-title">Categories</h3>
+      <h3 class="widget-title">分類</h3>
       <div class="category-box">
             <a class="category-link" href="/categories/C/">
                 C++
@@ -203,7 +203,7 @@
   
           </div>
           <div class="wordcount need-seperator meta-info">
-            2.6k words 
+            3k 詞 
           </div>
         </div>
         
@@ -254,6 +254,53 @@
 <p>14、private<code>和</code>protected 对于类外部持有该对象的指针都是不可见的。protected和private的区别在于继承的时候，子类继承父类，子类能够访问protected的成员，但是不能访问private的成员。</p>
 <h2 id="4-15"><a href="#4-15" class="headerlink" title="4.15"></a>4.15</h2><p>15、void* 指针，无类型指针，通用指针，泛型指针。任何类型的地址都可以赋值给 void* ，也就是说 void* 可以指向任何类型的对象。</p>
 <p>限制：不能够<strong>解引用</strong>以及<strong>指针运算</strong></p>
+<h2 id="4-16"><a href="#4-16" class="headerlink" title="4.16"></a>4.16</h2><p>16、new和malloc的区别：</p>
+<p>最核心的区别在于：<strong><code>new</code> 是C++的内置运算符，它不仅分配内存，还会调用对象的构造函数进行初始化；而 <code>malloc</code> 是C语言遗留下来的库函数，它只负责分配一块指定大小的“裸内存”，对对象一无所知。</strong></p>
+<p>以下是它们的详细对比：</p>
+<h3 id="1-核心区别对照表"><a href="#1-核心区别对照表" class="headerlink" title="1. 核心区别对照表"></a>1. 核心区别对照表</h3><table>
+<thead>
+<tr>
+<th><strong>特性</strong></th>
+<th><strong>new &#x2F; delete</strong></th>
+<th><strong>malloc &#x2F; free</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>本质属性</strong></td>
+<td><strong>C++ 运算符 (Operator)</strong></td>
+<td>C&#x2F;C++ 标准库函数 (Function)</td>
+</tr>
+<tr>
+<td><strong>构造与析构</strong></td>
+<td><strong>自动调用构造函数和析构函数</strong></td>
+<td>仅分配&#x2F;释放内存，<strong>不调用</strong>构造&#x2F;析构</td>
+</tr>
+<tr>
+<td><strong>返回类型</strong></td>
+<td>返回具体类型的指针（类型安全，无需强转）</td>
+<td>返回 <code>void*</code>（必须手动强制类型转换）</td>
+</tr>
+<tr>
+<td><strong>计算大小</strong></td>
+<td>编译器自动计算所需内存</td>
+<td>必须手动通过 <code>sizeof()</code> 计算并传入</td>
+</tr>
+<tr>
+<td><strong>失败处理</strong></td>
+<td>默认抛出 <code>std::bad_alloc</code> 异常</td>
+<td>返回 <code>NULL</code> (或 <code>nullptr</code>)</td>
+</tr>
+<tr>
+<td><strong>是否可重载</strong></td>
+<td>允许重载 (<code>operator new</code>)</td>
+<td>不允许重载</td>
+</tr>
+<tr>
+<td><strong>内存分配区域</strong></td>
+<td>自由存储区 (Free Store)</td>
+<td>堆区 (Heap)</td>
+</tr>
+</tbody></table>
 
         
       </div>
