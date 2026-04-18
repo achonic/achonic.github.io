@@ -233,7 +233,7 @@
   
           </div>
           <div class="wordcount need-seperator meta-info">
-            295 words 
+            6.1k words 
           </div>
         </div>
         
@@ -242,12 +242,15 @@
         
           <div class="truncate-text">
             
-              C++11：1、lambda表达式
-2、移动语义，右值引用，std::move
-C++14：C++17：1、C++17引入正式的内存池实现：。这套机制被称为 PMR (Polymorphic Memory Resources，多态内存资源)。
-C++20：1、协程  。promise_type协程结构体。Promise 协议和 Awaiter 协议。co await，co return，co yield协程语义。awaiter三件套，await_ready()，await_suspend()，await_resume()。
-2、C++20关于 std::atomic 的升级，等待机制 std::atomic::wait。
+              C++11：一、泛型编程和编译器特性：让编译器在编译阶段完成更多计算，并大幅降低模板报错的晦涩程度。
 
+auto 类型推导： 让编译器通过初始化表达式推断变量类型。
+decltype： 获取表达式或实体的静态类型，常用于泛型编程中。
+尾随返回类型 (Trailing Return Type)： 结合 auto 和 decltype，解决模板函数返回值依赖参数类型的问题（如 auto add(T1 a, T2 b) -&gt; decltype(a + b)）。
+可变参数模板 (Variadic Templates)： 允许模板接受任意数量的参数（template&lt;typename... Args&gt;），极大地增强了模板的灵活性。
+constexpr 常量表达式： 声明变量或函数可以在编译期求值，将运行期计算提前到编译期。
+类型别名 (using 语法)： 替代 typedef，支持模板别名（如 template&lt;typename T&gt; using MyVec = std::vector&lt;T&gt;;）。
+静态断言 (static_assert)： 编译...
             
           </div>
         
