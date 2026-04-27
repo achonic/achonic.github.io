@@ -20,15 +20,15 @@
   <link rel="preload" href="/css/fonts/Roboto-Regular.ttf" as="font" type="font/ttf" crossorigin="anonymous">
   <link rel="preload" href="/css/fonts/Roboto-Bold.ttf" as="font" type="font/ttf" crossorigin="anonymous">
 
-  <meta name="description" content="基于MPSC无锁队列和C++20异步协程的任务编排执行引擎技术栈：C++20协程(cotoutine)，无锁编程，原子变量，io_uring，内存模型，模板元编程，协程内存池， shared-nothing 项目描述：通过C++20的coroutine和io_uring封装异步协程任务， MPSC 无锁队列构建多线程异步协程任务投递通道，worker线程执行投递的协程任务，dag编排协程执行顺序。">
+  <meta name="description" content="项目一：基于MPSC无锁队列和C++20异步协程的任务编排执行引擎技术栈：C++20协程(cotoutine)，无锁编程，原子变量，io_uring，内存模型，模板元编程，协程内存池， shared-nothing 项目描述：通过C++20的coroutine和io_uring封装异步协程任务， MPSC 无锁队列构建多线程异步协程任务投递通道，worker线程执行投递的协程任务，dag编排协程执">
 <meta property="og:type" content="article">
 <meta property="og:title" content="项目介绍">
 <meta property="og:url" content="https://achonic.github.io/2026/04/13/C++/%E9%A1%B9%E7%9B%AE%E4%BB%8B%E7%BB%8D/index.html">
 <meta property="og:site_name" content="achonic&#39;s blogs">
-<meta property="og:description" content="基于MPSC无锁队列和C++20异步协程的任务编排执行引擎技术栈：C++20协程(cotoutine)，无锁编程，原子变量，io_uring，内存模型，模板元编程，协程内存池， shared-nothing 项目描述：通过C++20的coroutine和io_uring封装异步协程任务， MPSC 无锁队列构建多线程异步协程任务投递通道，worker线程执行投递的协程任务，dag编排协程执行顺序。">
+<meta property="og:description" content="项目一：基于MPSC无锁队列和C++20异步协程的任务编排执行引擎技术栈：C++20协程(cotoutine)，无锁编程，原子变量，io_uring，内存模型，模板元编程，协程内存池， shared-nothing 项目描述：通过C++20的coroutine和io_uring封装异步协程任务， MPSC 无锁队列构建多线程异步协程任务投递通道，worker线程执行投递的协程任务，dag编排协程执">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2026-04-13T06:26:16.319Z">
-<meta property="article:modified_time" content="2026-04-17T08:36:59.048Z">
+<meta property="article:modified_time" content="2026-04-26T08:55:28.132Z">
 <meta property="article:author" content="achonic">
 <meta name="twitter:card" content="summary">
   
@@ -170,6 +170,12 @@
       <h3 class="widget-title">Recent Posts</h3>
       <ul>
         
+          <a class="recent-link" href="/2026/04/26/C++/%E5%BE%85%E5%8A%9E/" title="" >
+            <div class="recent-link-text">
+              (no title)
+            </div>
+          </a>
+        
           <a class="recent-link" href="/2026/04/14/C++/%E6%80%BB%E7%BB%93C++%E5%90%84%E7%89%88%E6%9C%AC%E7%89%B9%E6%80%A7/" title="C++各版本新特性" >
             <div class="recent-link-text">
               C++各版本新特性
@@ -238,14 +244,14 @@
   
           </div>
           <div class="wordcount need-seperator meta-info">
-            1.3k words 
+            2.8k words 
           </div>
         </div>
         
       </header>
       <div class="e-content article-entry" itemprop="articleBody">
         
-          <h2 id="基于MPSC无锁队列和C-20异步协程的任务编排执行引擎"><a href="#基于MPSC无锁队列和C-20异步协程的任务编排执行引擎" class="headerlink" title="基于MPSC无锁队列和C++20异步协程的任务编排执行引擎"></a>基于MPSC无锁队列和C++20异步协程的任务编排执行引擎</h2><p>技术栈：C++20协程(cotoutine)，无锁编程，原子变量，io_uring，内存模型，模板元编程，协程内存池，</p>
+          <h2 id="项目一：基于MPSC无锁队列和C-20异步协程的任务编排执行引擎"><a href="#项目一：基于MPSC无锁队列和C-20异步协程的任务编排执行引擎" class="headerlink" title="项目一：基于MPSC无锁队列和C++20异步协程的任务编排执行引擎"></a>项目一：基于MPSC无锁队列和C++20异步协程的任务编排执行引擎</h2><p>技术栈：C++20协程(cotoutine)，无锁编程，原子变量，io_uring，内存模型，模板元编程，协程内存池，</p>
 <p>shared-nothing</p>
 <p>项目描述：通过C++20的coroutine和io_uring封装异步协程任务， MPSC 无锁队列构建多线程异步协程任务投递通道，worker线程执行投递的协程任务，dag编排协程执行顺序。</p>
 <p>核心产出与技术点：</p>
@@ -253,7 +259,7 @@
 <p>协程抽象层：基于 C++20 标准库 &lt; coroutine &gt; 封装 <code>Task&lt;T&gt;</code> 协程对象，Task<T> 协程对象持有协程句柄，Task类定义promise_type协程的构建和生命周期管理，promise_type通过持有上下文协程句柄实现对称传输避免连环resume堆叠，导致栈空间不足爆栈。</p>
 <p>io_uring ( Proactor模式 ) 结合协程：通过 C++20 协程提供的 awaiter 协议，封装 io_uring 的读写操作。有 IO 读写时挂起当前任务协程，提交 IO 读写事件到内核。io_uring极大地减少了系统调用开销，结合协程封装实现业务协程任务编写的逻辑同步，执行异步。</p>
 <p>引擎调度器：接收协程任务的投递，创建worker线程开启loop循环管理协程任务池生命周期，执行活跃的协程任务，回收已完成任务，防止内存泄漏。</p>
-<p>协程帧内存池的设计：通过内存池替代协程帧创建时new和delete内存分配操作。实现了 Thread-Local 缓存和全局 slab 池两级架构</p>
+<p>协程帧内存池：通过内存池替代协程帧默认的new和delete内存分配操作。内存池实现了 Thread-Local 缓存和全局 slab 池两级架构。每个线程私有缓存，不足向全局池线程安全地补充 。</p>
 <p>性能基准测试：</p>
 <p>1、google benchmark场景4个生产者线程投递任务，单worker线程消费任务。MPSC无锁队列对比mutex速度快6-7倍，是boost的boost::lockfree::queue的2倍。</p>
 <p>2、google benchmark场景本地 echo_server 的io吞吐量测试，本项目使用io_uring对比boost.asio性能高约25%。</p>
@@ -262,13 +268,32 @@
 <li>MPSC 无锁队列： 解决了多线程并发投递的冲突，实现了入口无锁化。</li>
 <li>io_uring + 协程： 解决了异步 IO 调度的开销，实现了执行非阻塞化。</li>
 <li>Shared-nothing 架构： 解决了业务数据的竞争，实现了逻辑无锁化。</li>
+<li></li>
 </ul>
-<h2 id="基于C-的高性能透明反向代理网关"><a href="#基于C-的高性能透明反向代理网关" class="headerlink" title="基于C++的高性能透明反向代理网关"></a>基于C++的高性能透明反向代理网关</h2><p>技术栈：主从reactor，多线程，互斥锁和锁管理，条件变量，智能指针，线程池，epoll，socket。</p>
+<p>为什么用自旋锁保障内存池的线程安全？</p>
+<p>1、低竞争</p>
+<p>关键在于 <strong>每次加锁间隔了 4096 次无锁分配</strong>。</p>
+<p>假设服务器有 4 个线程在跑协程，每个线程每秒创建 10 万个协程（已经非常高频了）：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">线程每秒分配 100,000 次</span><br><span class="line"></span><br><span class="line">每 4,096 次分配才触碰一次全局池的锁</span><br><span class="line"></span><br><span class="line">→ 每个线程每秒加锁 ≈ 100,000 / 4,096 ≈ 24 次</span><br><span class="line"></span><br><span class="line">→ 4 个线程合计每秒加锁 ≈ 96 次</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="项目二：基于C-的高性能透明反向代理网关"><a href="#项目二：基于C-的高性能透明反向代理网关" class="headerlink" title="项目二：基于C++的高性能透明反向代理网关"></a>项目二：基于C++的高性能透明反向代理网关</h2><p>技术栈：主从reactor，多线程，互斥锁和锁管理，条件变量，智能指针，线程池，epoll，socket。</p>
 <p>项目描述：使用IO多路复用机制监听处理客户端高并发连接请求，根据不同的请求入口把消息转发到真实后端地址。</p>
 <p>核心产出与技术点：</p>
 <p>1、主从reactor以及one loop per thread模型，其中单线程Acceptor只监听和处理连接</p>
 <p>2、客户端和服务器的数据传输，任务封装成lambda对象，由主线程分发，给线程池当中取出的worker线程处理。</p>
 <p>3、worker线程负责客户端与网关，网关与服务器的双向通信。</p>
+<p>困难点：</p>
+<p>EPOLL的LT模式改成ET模式。为了提升性能，本来在Acceptor主线程处理新连接的时候，由于就一个listen_socketfd_注册在epoll里，每次都是先epoll_wait然后唤醒，然后执行handleRead，然后处理新连接投递任务，然后又epoll_wait，然后再执行handleRead。每一次handleRead就执行了一次连接处理，导致大量连接积压着。</p>
+<p>改成ET模式，在监听到大量并发连接的时候，由于边沿触发，就只会唤醒一次epoll_wait，所以必须只要listen_socketfd里积压着连接，就一定要处理完，直到全部清空。所以handleRead代码里需要改造成while(true)循环体，循环体内：只要accept4返回了conn_fd就表示当前listen_socketfd是有连接请求，就继续循环。如果返回fd&#x3D;-1表示没有连接请求就break退出。保证连接请求不会丢失。</p>
+<p>改成ET模式，除了前面的handleRead，需要处理EAGAIN，需要处理用户缓冲区buffer的读写</p>
+<p>还是改成LT模式，ET模式在这个模型下本质影响不大。</p>
+<p>TCP发送包的顺序性（应用层怎么处理把TCP包按顺序发给内核）：首先用户态需要有一个发送缓冲区output_buffer，要是output_buffer不是空的，说明此时内核缓冲区是满的，发送缓冲区还积压数据没发出，所以当前的tcp包不能直接发送即通过write写入内核，于是就把tcp包塞进发送缓冲区。当output_buffer为空，说明此时内核缓冲区是没满的，于是用户态这个包就可以直接write往内核写，如果全写完就直接结束，如果内核缓冲区不足TCP包没写完，则要塞进发送缓冲区，并且开启EPOLLOUT监听，等待内核缓冲区未满可写时再唤醒。</p>
+<h2 id="项目中使用到的C-14之后的特性的点："><a href="#项目中使用到的C-14之后的特性的点：" class="headerlink" title="项目中使用到的C++14之后的特性的点："></a>项目中使用到的C++14之后的特性的点：</h2><p>1、std::make_unique (最广泛的基础应用)<br>  位置：遍布整个项目核心类（Server.cpp, EventLoop.cpp, Acceptor.cpp, ThreadPool.cpp,<br>  等等）</p>
+<p>2、广义 Lambda 捕获 (Generalized Lambda Captures &#x2F; 初始化捕获)<br>  位置：主要用于跨线程异步投递任务时的闭包包装。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">Server::removeConnection</span><span class="params">(<span class="type">const</span> TcpConnection *conn)</span> </span>&#123;</span><br><span class="line">     <span class="comment">// 注意这里：connName = std::string(conn-&gt;name())</span></span><br><span class="line">     loop_-&gt;<span class="built_in">runInLoop</span>([<span class="keyword">this</span>, connName = std::<span class="built_in">string</span>(conn-&gt;<span class="built_in">name</span>())]() &#123;</span><br><span class="line">       std::lock_guard&lt;std::mutex&gt; <span class="built_in">lock</span>(mutex_);</span><br><span class="line">       <span class="type">size_t</span> n = connections_.<span class="built_in">erase</span>(connName);</span><br><span class="line">       <span class="comment">// ...</span></span><br><span class="line">     &#125;);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
 
         
       </div>

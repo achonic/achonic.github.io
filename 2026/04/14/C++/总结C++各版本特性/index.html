@@ -28,7 +28,7 @@
 <meta property="og:description" content="C++11：一、泛型编程和编译器特性：让编译器在编译阶段完成更多计算，并大幅降低模板报错的晦涩程度。  auto 类型推导： 让编译器通过初始化表达式推断变量类型。 decltype： 获取表达式或实体的静态类型，常用于泛型编程中。 尾随返回类型 (Trailing Return Type)： 结合 auto 和 decltype，解决模板函数返回值依赖参数类型的问题（如 auto add(T1">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2026-04-14T13:11:57.745Z">
-<meta property="article:modified_time" content="2026-04-18T14:15:06.343Z">
+<meta property="article:modified_time" content="2026-04-27T08:45:04.991Z">
 <meta property="article:author" content="achonic">
 <meta name="twitter:card" content="summary">
   
@@ -170,6 +170,12 @@
       <h3 class="widget-title">Recent Posts</h3>
       <ul>
         
+          <a class="recent-link" href="/2026/04/26/C++/%E5%BE%85%E5%8A%9E/" title="" >
+            <div class="recent-link-text">
+              (no title)
+            </div>
+          </a>
+        
           <a class="recent-link" href="/2026/04/14/C++/%E6%80%BB%E7%BB%93C++%E5%90%84%E7%89%88%E6%9C%AC%E7%89%B9%E6%80%A7/" title="C++各版本新特性" >
             <div class="recent-link-text">
               C++各版本新特性
@@ -238,7 +244,7 @@
   
           </div>
           <div class="wordcount need-seperator meta-info">
-            6.1k words 
+            6.2k words 
           </div>
         </div>
         
@@ -337,7 +343,7 @@
 <h3 id="四：初始化、语法糖与控制流（Lambda-再进化）"><a href="#四：初始化、语法糖与控制流（Lambda-再进化）" class="headerlink" title="四：初始化、语法糖与控制流（Lambda 再进化）"></a>四：初始化、语法糖与控制流（Lambda 再进化）</h3><p>Lambda 表达式在 C++14 中得到了史诗级的增强，语法糖也让代码更具可读性。</p>
 <ul>
 <li><strong>新增：泛型 Lambda (Generic Lambdas)：</strong> 允许在 Lambda 的参数列表里直接使用 <code>auto</code>（如 <code>[](auto x, auto y) { return x + y; }</code>）。这本质上是让编译器在底层自动生成了一个模板调用运算符（<code>operator()</code>）。</li>
-<li><strong>新增：Lambda 捕获列表初始化 (Init-capture)：</strong> 这是极其重要的特性！C++11 的 Lambda 只能按值或按引用捕获外部变量，<strong>无法捕获只支持移动的对象</strong>（比如 <code>std::unique_ptr</code>）。C++14 允许在捕获列表中创建新变量并初始化，例如 <code>[ptr = std::move(my_ptr)] { ... }</code>，完美解决了 Lambda 与移动语义的结合问题。</li>
+<li><strong>新增：Lambda 捕获列表初始化 (Init-capture)（广义 lambda 捕获）：</strong> 这是极其重要的特性！C++11 的 Lambda 只能按值或按引用捕获外部变量，<strong>无法捕获只支持移动的对象</strong>（比如 <code>std::unique_ptr</code>）。C++14 允许在捕获列表中创建新变量并初始化，例如 <code>[ptr = std::move(my_ptr)] { ... }</code>，完美解决了 Lambda 与移动语义的结合问题。</li>
 <li><strong>新增：二进制字面量：</strong> 可以直接使用 <code>0b</code> 或 <code>0B</code> 前缀书写二进制数（如 <code>int mask = 0b101010;</code>）。</li>
 <li><strong>新增：数字分隔符 (Digit Separators)：</strong> 允许在数字常量中使用单引号 <code>&#39;</code> 作为分隔符，增强长数字的可读性（如 <code>long budget = 1&#39;000&#39;000&#39;000;</code>）。</li>
 </ul>
@@ -359,6 +365,9 @@
 <li><strong>新增：<code>std::quoted</code>：</strong> 用于 I&#x2F;O 流的输入输出操作，能够自动处理包含空格的字符串的引号添加与解析。</li>
 </ul>
 <h2 id="C-17："><a href="#C-17：" class="headerlink" title="C++17："></a>C++17：</h2><p>1、C++17引入正式的内存池实现：<memory_resource>。这套机制被称为 <strong>PMR (Polymorphic Memory Resources，多态内存资源)</strong>。</p>
+<p>2、std::string_view</p>
+<p>3、std::optional</p>
+<p>4、inline 变量：如果没有inline关键字会让多个 <code>.cpp</code> include 这个头文件会导致<strong>重复定义链接错误</strong></p>
 <h2 id="C-20："><a href="#C-20：" class="headerlink" title="C++20："></a>C++20：</h2><p>1、协程 <coroutine> 。promise_type协程结构体。Promise 协议和 Awaiter 协议。co await，co return，co yield协程语义。awaiter三件套，await_ready()，await_suspend()，await_resume()。</p>
 <p>2、C++20关于 std::atomic 的升级，等待机制 std::atomic::wait。</p>
 
@@ -373,10 +382,15 @@
   
     
 <nav id="article-nav">
-  <a class="article-nav-btn left  disabled "
+  <a class="article-nav-btn left "
+    
+      href="/2026/04/26/C++/%E5%BE%85%E5%8A%9E/"
+      title=""
      >
     <i class="fa-solid fa-angle-left"></i>
     <p class="title-text">
+      
+        (No Title)
         
     </p>
   </a>
